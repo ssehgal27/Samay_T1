@@ -1,20 +1,47 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import LoginScreen from './screens/LoginScreen';
+import TransactionsScreen from './screens/TransactionsScreen';
+import TransactionDetailsScreen from './screens/TransactionDetailsScreen';
+import AddTransactionScreen from './screens/AddTransactionScreen';
 
-export default function App() {
+const Stack = createNativeStackNavigator();
+
+const transactionsScreenOptions = ({ navigation }) => ({
+  headerRight: () => (
+    <TouchableOpacity onPress={() => navigation.navigate('Login')}>
+      <Text style={styles.logoutButton}>Logout</Text>
+    </TouchableOpacity>
+  ),
+});
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Login">
+        <Stack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
+        <Stack.Group>
+            <Stack.Screen
+              name="Transactions"
+              component={TransactionsScreen}
+              options={transactionsScreenOptions}
+            />
+            <Stack.Screen name="TransactionDetails" component={TransactionDetailsScreen} />
+            <Stack.Screen name="AddTransaction" component={AddTransactionScreen} />
+        </Stack.Group>
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+  logoutButton: {
+    color: '#007bff',
+    fontSize: 16,
+    marginRight: 10,
   },
 });
+
+export default App; 
